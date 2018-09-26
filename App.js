@@ -32,7 +32,8 @@ class App extends React.Component {
       {index: 3, currency: 'GBP', imagePath: require(`./assets/flags/gb.png`)},
       {index: 4, currency: 'IRR', imagePath: require(`./assets/flags/iri.png`)},
       {index: 5, currency: 'RUB', imagePath: require(`./assets/flags/rus.png`)},
-      {index: 6, currency: 'GEL', imagePath: require(`./assets/flags/geo.png`)}
+      {index: 6, currency: 'GEL', imagePath: require(`./assets/flags/geo.png`)},
+      {index: 7, currency: 'AMD', imagePath: require(`./assets/flags/arm.png`)},
     ];
     let values = currenciesToBeConverted.map(item => {
       let value = {

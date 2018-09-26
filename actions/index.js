@@ -13,7 +13,11 @@ export const getCurrencies = (date) => {
         } else {
             axios.get('http://data.fixer.io/api/latest?access_key=30916e24be13a3ab2220c966d794b869')
                 .then(response => {
-                    dispatch(getCurrenciesResolved(response.data));
+                    if(response.data.success) {
+                        dispatch(getCurrenciesResolved(response.data));
+                    } else {
+                        dispatch(getCurrenciesRejected());
+                    }
                 })
                 .catch(err => {
                     console.log(err)
