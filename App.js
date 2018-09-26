@@ -26,26 +26,27 @@ class App extends React.Component {
   constructor(props) {
     let currency = props.currency
     let currenciesToBeConverted = [
-      {index: 0, currency: 'AZN', imagePath: require(`./assets/flags/aze.png`)},
-      {index: 1, currency: 'USD', imagePath: require(`./assets/flags/us.png`)},
-      {index: 2, currency: 'EUR', imagePath: require(`./assets/flags/eur.png`)},
-      {index: 3, currency: 'GBP', imagePath: require(`./assets/flags/gb.png`)},
-      {index: 4, currency: 'IRR', imagePath: require(`./assets/flags/iri.png`)},
-      {index: 5, currency: 'RUB', imagePath: require(`./assets/flags/rus.png`)},
-      {index: 6, currency: 'GEL', imagePath: require(`./assets/flags/geo.png`)},
-      {index: 7, currency: 'TRY', imagePath: require(`./assets/flags/tur.png`)},
+      {index: 0, currency: 'AZN', round: 4, imagePath: require(`./assets/flags/aze.png`)},
+      {index: 1, currency: 'USD', round: 4, imagePath: require(`./assets/flags/us.png`)},
+      {index: 2, currency: 'EUR', round: 4, imagePath: require(`./assets/flags/eur.png`)},
+      {index: 3, currency: 'GBP', round: 4, imagePath: require(`./assets/flags/gb.png`)},
+      {index: 4, currency: 'IRR', round: 0, imagePath: require(`./assets/flags/iri.png`)},
+      {index: 5, currency: 'RUB', round: 2, imagePath: require(`./assets/flags/rus.png`)},
+      {index: 6, currency: 'GEL', round: 4, imagePath: require(`./assets/flags/geo.png`)},
+      {index: 7, currency: 'TRY', round: 4, imagePath: require(`./assets/flags/tur.png`)},
     ];
     let values = currenciesToBeConverted.map(item => {
       let value = {
         currency: item.currency,
-        amount: 1
+        amount: 1,
+        round: item.round
       }
       if(item.currency === 'AZN') {
-        value.amount = value.amount.toFixed(2).toString()
+        value.amount = value.amount.toFixed(item.round).toString()
       } else if (item.currency === props.currency.base) {
-        value.amount = (1 / currency["rates"]["AZN"]).toFixed(2).toString()
+        value.amount = (1 / currency["rates"]["AZN"]).toFixed(item.round).toString()
       } else {
-        value.amount = (1 / currency["rates"]["AZN"] * currency["rates"][item.currency]).toFixed(2).toString()
+        value.amount = (1 / currency["rates"]["AZN"] * currency["rates"][item.currency]).toFixed(item.round).toString()
       }
       return value;
     });
@@ -75,7 +76,7 @@ class App extends React.Component {
 
   handleChange (text, currency) {
     // text = text === '' ? 0 : parseFloat(text, 10);
-    let newValues = this.state.values.map(previousValue => {
+    let newValues = this.state.values.map((previousValue) => {
       if(previousValue.currency === currency) {
         console.log(text);
         return {
@@ -86,7 +87,7 @@ class App extends React.Component {
         let amount = 1 / this.state.currency.rates[currency] * text * this.state.currency.rates[previousValue.currency];
         return {
           ...previousValue,
-          amount: amount !== 0 ? amount.toFixed(2).toString() : ''
+          amount: amount !== 0 ? amount.toFixed(previousValue.round).toString() : ''
         }
       }
     })
