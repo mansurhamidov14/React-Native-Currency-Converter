@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "my-new-project",
+    "name": "Currency Converter",
     "description": "This project is really great.",
-    "slug": "my-new-project",
+    "slug": "currency-converter",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "platforms": ["ios", "android"],
@@ -22,6 +22,9 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.mansurhamidov.currencyconverter"
     }
   }
 }
