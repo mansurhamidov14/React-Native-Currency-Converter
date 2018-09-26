@@ -1,7 +1,12 @@
 import React from 'react';
 import Expo from 'expo';
 import { Container, Header, Content, Row } from 'native-base';
+import {Provider, connect} from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import moment from 'moment';
+import * as actions from './actions';
 import Input from './components/Input';
+import {store, persistor} from './store';
 
 function chunkArray(myArray, chunk_size){
   var index = 0;
@@ -17,23 +22,9 @@ function chunkArray(myArray, chunk_size){
   return tempArray;
 }
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
-    let currency = {
-      "success":true,
-      "timestamp":1537885746,
-      "base":"EUR",
-      "date":"2018-09-25",
-      "rates":{
-        "RUB":77.5339,
-        "GBP":0.895611,
-        "IRR":49624.91056,
-        "GEL":3.093796,
-        "AZN":2.009538,
-        "USD":1.178599,
-        "EUR": 1
-      }
-    }
+    let currency = props.currency
     let currenciesToBeConverted = [
       {index: 0, currency: 'AZN', imagePath: require(`./assets/flags/aze.png`)},
       {index: 1, currency: 'USD', imagePath: require(`./assets/flags/us.png`)},
@@ -50,7 +41,7 @@ export default class App extends React.Component {
       }
       if(item.currency === 'AZN') {
         value.amount = value.amount.toFixed(2).toString()
-      } else if (item.currency === currency.base) {
+      } else if (item.currency === props.currency.base) {
         value.amount = (1 / currency["rates"]["AZN"]).toFixed(2).toString()
       } else {
         value.amount = (1 / currency["rates"]["AZN"] * currency["rates"][item.currency]).toFixed(2).toString()
@@ -60,13 +51,16 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      currency,
+      currency: {},
       currenciesToBeConverted,
       values
     }
   }
 
   async componentWillMount() {
+  
+    this.setState({currency: this.props.currency})
+    this.props.getCurrencies(this.props.currency.date);
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
@@ -110,20 +104,36 @@ export default class App extends React.Component {
       <Container>
         <Header />
           <Content style={{flex: 1, flexDirection: 'row'}}>
-          {inputGroups.map((currenciesToBeConverted, id) => 
-            <Row key={id} style={{height:60}}>
-              {currenciesToBeConverted.map((item, index) => 
-                <Input 
-                  key={index} {...item} 
-                  onChangeAmount={(text) => this.handleChange(text, item.currency)}
-                  value={this.state.values[item.index].amount}
-                />
-              )}
-            </Row>
-          )}
-          
+            {inputGroups.map((currenciesToBeConverted, id) => 
+              <Row key={id} style={{height:60}}>
+                {currenciesToBeConverted.map((item, index) => 
+                  <Input 
+                    key={index} {...item} 
+                    onChangeAmount={(text) => this.handleChange(text, item.currency)}
+                    value={this.state.values[item.index].amount}
+                  />
+                )}
+              </Row>
+            )}
           </Content>
       </Container>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    currency: state.currency,
+    store
+  }
+}
+
+const ReduxApp = connect (mapStateToProps, actions)(App);
+
+export default () => (
+  <Provider store={store}> 
+    <PersistGate loading={null} persistor={persistor}> 
+      <ReduxApp/>
+    </PersistGate>
+  </Provider>
+);
