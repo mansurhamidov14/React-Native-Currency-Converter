@@ -24,7 +24,7 @@ function chunkArray(myArray, chunk_size){
 
 class App extends React.Component {
   constructor(props) {
-    let currency = props.currency
+    let currency = props.currency;
     let currenciesToBeConverted = [
       {index: 0, currency: 'AZN', round: 4, imagePath: require(`./assets/flags/aze.png`)},
       {index: 1, currency: 'USD', round: 4, imagePath: require(`./assets/flags/us.png`)},
@@ -60,9 +60,8 @@ class App extends React.Component {
   }
 
   async componentWillMount() {
-  
-    this.setState({currency: this.props.currency})
     this.props.getCurrencies(this.props.currency.date);
+    this.setState({currency: this.props.currency})
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
@@ -70,15 +69,10 @@ class App extends React.Component {
     this.setState({loading: false});
   }
 
-  // componentDidMount () {
-  //   console.log(this.state);
-  // }
-
   handleChange (text, currency) {
     // text = text === '' ? 0 : parseFloat(text, 10);
     let newValues = this.state.values.map((previousValue) => {
       if(previousValue.currency === currency) {
-        console.log(text);
         return {
           ...previousValue,
           amount: text.toString()
@@ -90,7 +84,7 @@ class App extends React.Component {
           amount: amount !== 0 ? amount.toFixed(previousValue.round).toString() : ''
         }
       }
-    })
+    });
     this.setState({values:newValues})
   }
 
@@ -128,7 +122,7 @@ const mapStateToProps = state => {
     currency: state.currency,
     store
   }
-}
+};
 
 const ReduxApp = connect (mapStateToProps, actions)(App);
 
