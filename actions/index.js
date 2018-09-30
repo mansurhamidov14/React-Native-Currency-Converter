@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export const GET_CURRENCIES_RESOLVED = 'GET_CURRENCIES_RESOLVED';
 export const GET_CURRENCIES_REJECTED = 'GET_CURRENCIES_REJECTED';
+export const TOGGLE_CURRENCY = 'TOGGLE_CURRENCY'
 
 export const getCurrencies = (date) => {
     return dispatch => {
@@ -38,5 +39,12 @@ export const getCurrenciesResolved = (response) => {
 export const getCurrenciesRejected = () => {
     return {
         type: GET_CURRENCIES_REJECTED
+    }
+}
+
+export const toggleCurrency = index => {
+    return {
+        type: TOGGLE_CURRENCY,
+        index
     }
 }
