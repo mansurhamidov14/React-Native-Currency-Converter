@@ -6,18 +6,18 @@ import * as actions from '../actions';
 import Input from '../components/Input';
 
 function chunkArray(myArray, chunk_size){
-    var index = 0;
-    var arrayLength = myArray.length;
-    var tempArray = [];
-    
-    for (index = 0; index < arrayLength; index += chunk_size) {
-        myChunk = myArray.slice(index, index+chunk_size);
-        // Do something if you want with the group
-        tempArray.push(myChunk);
-    }
+  var index = 0;
+  var arrayLength = myArray.length;
+  var tempArray = [];
   
-    return tempArray;
+  for (index = 0; index < arrayLength; index += chunk_size) {
+      myChunk = myArray.slice(index, index+chunk_size);
+      // Do something if you want with the group
+      tempArray.push(myChunk);
   }
+  
+  return tempArray;
+}
   
   class HomeScreen extends React.Component {
     constructor(props) {
@@ -55,6 +55,9 @@ function chunkArray(myArray, chunk_size){
       this.setState({loading: false});
     }
     handleChange (text, currency) {
+      if(text.indexOf(',') !== -1 || text.lastIndexOf('.') > text.indexOf('.')) {
+        return;
+      }
       // text = text === '' ? 0 : parseFloat(text, 10);
       let newValues = this.state.values.map((previousValue) => {
         if(previousValue.currency === currency) {
