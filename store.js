@@ -7,7 +7,8 @@ import reducers from './reducers/root';
 
 const persistConfig = {
     key: 'root',
-    storage
+    storage,
+    whitelist: ['currency', 'availableCurrencies']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
