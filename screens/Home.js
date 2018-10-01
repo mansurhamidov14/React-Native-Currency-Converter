@@ -30,24 +30,7 @@ function chunkArray(myArray, chunk_size){
     }
   
     async componentWillMount() {
-      let currency = this.props.currency;
-      let values = this.props.availableCurrencies.map(item => {
-        let value = {
-          currency: item.currency,
-          amount: 1,
-          round: item.round
-        }
-        if(item.currency === 'AZN') {
-          value.amount = value.amount.toFixed(item.round).toString()
-        } else if (item.currency === this.props.currency.base) {
-          value.amount = (1 / currency["rates"]["AZN"]).toFixed(item.round).toString()
-        } else {
-          value.amount = (1 / currency["rates"]["AZN"] * currency["rates"][item.currency]).toFixed(item.round).toString()
-        }
-        return value;
-      });
       this.props.getCurrencies(this.props.currency.date);
-      this.setState({currency: this.props.currency, values})
       await Expo.Font.loadAsync({
         'Roboto': require('native-base/Fonts/Roboto.ttf'),
         'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
@@ -66,7 +49,7 @@ function chunkArray(myArray, chunk_size){
             amount: text.toString()
           }
         } else {
-          let amount = 1 / this.state.currency.rates[currency] * text * this.state.currency.rates[previousValue.currency];
+          let amount = 1 / this.props.currency.rates[currency] * text * this.props.currency.rates[previousValue.currency];
           return {
             ...previousValue,
             amount: amount !== 0 ? amount.toFixed(previousValue.round).toString() : ''
@@ -74,6 +57,26 @@ function chunkArray(myArray, chunk_size){
         }
       });
       this.setState({values:newValues})
+    }
+
+    componentDidMount() {
+      let values = this.props.availableCurrencies.map(item => {
+        let value = {
+          currency: item.currency,
+          amount: 1,
+          round: item.round
+        }
+        if(item.currency === 'AZN') {
+          value.amount = value.amount.toFixed(item.round).toString()
+        } else if (item.currency === this.props.currency.base) {
+          value.amount = (1 / this.props.currency["rates"]["AZN"]).toFixed(item.round).toString()
+        } else {
+          value.amount = (1 / this.props.currency["rates"]["AZN"] * this.props.currency["rates"][item.currency]).toFixed(item.round).toString()
+        }
+        return value;
+      });
+      
+      this.setState({values})
     }
     
   
@@ -83,7 +86,8 @@ function chunkArray(myArray, chunk_size){
       }
       
       let inputGroups = chunkArray(this.props.availableCurrencies.filter(c => c.active), 2);
-  
+      let dt = this.props.currency.date.split('-');
+      let formattedCurrencyDate = `${dt[2]}.${dt[1]}.${dt[0]}`;
       return (
         <Container>
           <Header style={{height:70, paddingTop: 20}}>
@@ -95,6 +99,7 @@ function chunkArray(myArray, chunk_size){
             </Right>
           </Header>
           <Content style={{flex: 1, flexDirection: 'row'}}>
+            <Text style={{textAlign:'center', color: '#666666', marginTop: 8, marginBottom: 3}}>Currencies for {formattedCurrencyDate}</Text>
             {inputGroups.map((currenciesToBeConverted, id) => 
               <Row key={id} style={{height:60}}>
                 {currenciesToBeConverted.map((item, index) => 
