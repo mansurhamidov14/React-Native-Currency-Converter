@@ -28,7 +28,7 @@ function chunkArray(myArray, chunk_size){
         values: {}
       }
     }
-  
+
     async componentWillMount() {
       this.props.getCurrencies(this.props.currency.date);
       await Expo.Font.loadAsync({
@@ -65,7 +65,7 @@ function chunkArray(myArray, chunk_size){
           currency: item.currency,
           amount: 1,
           round: item.round
-        }
+        };
         if(item.currency === 'AZN') {
           value.amount = value.amount.toFixed(item.round).toString()
         } else if (item.currency === this.props.currency.base) {

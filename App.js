@@ -17,7 +17,7 @@ const AppStack = createStackNavigator({
   {
     headerMode: 'none',
     initialRouteName: 'Home'
-  })
+  });
 
 export default () => (
   <Provider store={store}> 
